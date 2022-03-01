@@ -1,0 +1,132 @@
+#Hannah Neymeyer
+#Prof Locklair
+#CSC 350
+#2/22/2022
+
+from datetime import datetime #use later for calculating time
+
+class startingProcess:
+    
+    def __init__(self, myIndex):
+        # spot in the PCB array
+        self.myIndex = int(myIndex)
+        #Parent
+        self.ParentProcess1 = None
+        self.Child1 = None
+        #y= younger child and o=older child
+        self.y = None
+        self.o = None
+
+    def setChild1(self, Child1):
+        self.Child1 = Child1
+
+    def getChild1(self):
+        return self.Child1
+
+    def setMyIndex(self, num):
+        self.myIndex = int(num)
+
+    def getMyIndex(self):
+        return self.myIndex
+
+    def setParentProcess1(self, p):
+        self.ParentProcess1 = p
+
+    def getParentProcess1(self):
+        return self.ParentProcess
+
+    def setOldSibl(self, s):
+        self.o = s
+
+    def getOldSibl(self):
+        return self.o
+
+    def setYoungSibl(self, s):
+        self.y = s
+
+    def getYoungSibl(self):
+        return self.y
+            
+#use findlen to define length of pcb1    
+def findLen(PCB1):
+    counter = 0    
+    for i in PCB1:
+        counter += 1
+    return counter
+#define length of pcb1    
+PCB1 = "5"
+print(findLen(PCB1))
+
+
+def create(p, PCB1):  
+    #process creation
+    #new child
+    childProcess = startingProcess(findLen(PCB1))
+    PCB1.append(childProcess)
+    childProcess.setParentProcess1(p)
+    childProcess.setMyIndex(findLen(PCB1))
+
+    print("Process [", p.getMyIndex(), "] created [", childProcess.getMyIndex(), "]")
+    return PCB1
+
+#Destroy process
+#destroy younger child
+def destroy(theProcess, original, pcb1):
+    while (theProcess.y is not None):
+      child1 = theProcess.getchild1()
+      theProcess.y = theProcess.y.next
+      if child1 is not None:
+          destroy(theProcess, original, pcb1)
+    #destroy older child    
+    while (theProcess.o is not None):
+      temp = theProcess.o
+      theProcess.o = theProcess.o.next
+      temp = None
+     #destroy parent 
+    while (theProcess.ParentProcess1 is not None):
+      temp = theProcess.ParentProcess1
+      theProcess.ParentProcess1 = theProcess.ParentProcess1.next
+      temp = None
+      
+                
+#delete process is working a bit weird :(
+    print(theProcess.getMyIndex(), "has been destroyed")
+    pcb1.remove(theProcess)
+    theProcess.getMyIndex = None
+    theProcess.ParentProcess = None
+    theProcess.o = None
+    theProcess.y = None
+    return PCB1
+
+def display(pcb1):
+    displayPCB1 = []
+    for c in range(len(pcb1)):
+        b = pcb1[c]
+        a = b.getMyIndex()
+        displayPCB1.append(a)
+    print(displayPCB1)
+
+
+def initializeThePCB1():
+    PCB1 = []
+    initialProcess = startingProcess(0)
+    initialProcess.setMyIndex(0)
+    PCB1.append(initialProcess)
+    return PCB1
+
+
+begin_time = datetime.now()
+
+for x in range(150):
+    PCB1 = initializeThePCB1()
+    PCB1 = create(PCB1[0], PCB1)
+    PCB1 = create(PCB1[0], PCB1)
+    PCB1 = create(PCB1[0], PCB1)
+    PCB1 = create(PCB1[1], PCB1)
+    destroy(PCB1[0], PCB1[0], PCB1)
+    print("New PCB: ")
+    display(PCB1)
+    print("----------")#split 
+    
+#runtime, used datatime from beggining 
+print(datetime.now() - begin_time)
