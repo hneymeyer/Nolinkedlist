@@ -1,0 +1,81 @@
+#Hannah Neymeyer
+#Prof Locklair
+#CSC 350
+#2/20/2022
+
+from datetime import datetime
+
+def startingPCB():
+    pcb1 = [[0, None, None, None]]
+    return pcb1
+
+#use findlen to define length of pcb1    
+def findLen(pcb1):
+    counter = 0    
+    for i in pcb1:
+        counter += 1
+    return counter
+#define length of pcb1    
+pcb1 = "5"
+print(findLen(pcb1))
+
+def create(p, pcb1):
+    #New process array,child creation
+    child = [findLen(pcb1), p[0], None, None]
+    #Parent index
+    parent = p[0]
+    #See if the child has siblings
+    if parent is not None:
+        v = findLen(pcb1) - 1
+        for x in range(findLen(pcb1)):
+            if x != findLen(pcb1):
+                #shared parent
+                if parent == pcb1[v][1]:
+                    # set younger
+                    child[2] = pcb1[v][0]
+                    # set older
+                    pcb1[v][3] = child[0]
+    #adding child
+    pcb1.append(child)
+    #printing the processes and their repective child
+    print("Process [", child[1], "] created [", child[0], "]")
+    return pcb1
+
+#Start of destroy function
+def destroy(p, pcb1):
+    #Index
+    v = findLen(pcb1) - 1
+    z = v - p[0]
+    for x in range(z):
+        if pcb1[v][1] == p[0]:
+            destroy(pcb1[v], pcb1)
+        v -= 1
+#return deleted
+    if p[1] is not None:
+        print("[", p[0], "] deleted")
+    
+    if v == 0:
+        # no older sibling
+        if p[2] is not None:
+            pcb1[youngerSib][3] = None
+        # no younger sibling
+        elif p[3] is not None:
+            pcb1[olderSib][2] = None
+
+    #delete the process from the array
+    pcb1.remove(p)
+    return pcb1
+ 
+begin_time = datetime.now()
+
+for x in range(150):
+    PCB = startingPCB()
+    PCB = create(PCB[0], PCB)
+    PCB = create(PCB[0], PCB)
+    PCB = create(PCB[0], PCB)
+    PCB = create(PCB[2], PCB)
+    print("Updated PCB:", PCB)
+    PCB = destroy(PCB[0], PCB)
+    print("------------------") #split rounds
+
+print(datetime.now() - begin_time) #get time
